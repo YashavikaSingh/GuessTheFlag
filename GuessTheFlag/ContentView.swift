@@ -13,7 +13,9 @@ struct ContentView: View {
     @State private var correctAnswer = Int.random(in: 0...2)
         
     @State private var showingScore = false
+    @State private var showingEndScreen = false
     @State private var scoreTitle = ""
+    @State private var questionsPlayed : Int = 0
     
     @State private var score = 0
     var body: some View {
@@ -25,10 +27,11 @@ struct ContentView: View {
                 .ignoresSafeArea()
               
                 VStack {
-                    Spacer()
+                  
                     Text("Guess the Flag")
-                        .font(.custom("Georgia", size: 50).bold())
+                        .font(.custom("Georgia", size: 40).bold())
                         .foregroundStyle(.white)
+                        .padding(EdgeInsets(top: 40, leading: 4, bottom: 10, trailing: 4))
                        
                   
                     
@@ -36,14 +39,14 @@ struct ContentView: View {
                     VStack (spacing: 15) {
                         VStack {
                             Text("Tap the flag of")
-                                .font(.subheadline.weight(.heavy))
+                                .font(.title3.bold())
                                 .foregroundStyle(.secondary)
                             Text(countries[correctAnswer])
                                 .font(.largeTitle.weight(.semibold))
                                 .foregroundStyle(.black)
                         }
                         
-                        .padding()
+                        .padding(5)
                         
                         ForEach(0..<3) {number in
                             Button {
@@ -72,9 +75,15 @@ struct ContentView: View {
                     Spacer()
                 
                     VStack{
-                        Text("score: \(score)")
+                        Text("score: \(score)/\(questionsPlayed)")
                             .foregroundStyle(.white)
                             .font(.title.bold() )
+                        Spacer()
+                        ProgressView("Questions completed", value: Double(questionsPlayed), total: 8)
+                            .foregroundColor(.white)
+                            .font(.title3.bold())
+                            .padding(30)
+                            
                     }
                     
                     Spacer()
@@ -94,6 +103,15 @@ struct ContentView: View {
         message: {
             Text("Your score is \(score)")
         }
+        
+        .alert("Game Over", isPresented: $showingEndScreen)
+        {
+            Button("Continue ", action: restart )
+        }
+    message: {
+        Text("Your score is \(score)")
+    }
+        
             
 
         
@@ -101,6 +119,11 @@ struct ContentView: View {
      
     
     func flagTapped (_ number: Int) {
+        questionsPlayed += 1
+        if(questionsPlayed == 8)
+        {
+            showingEndScreen = true
+        }
         
          if(number == correctAnswer)
         {
@@ -109,7 +132,7 @@ struct ContentView: View {
          }
         else
         {
-            scoreTitle = "Wrong "
+            scoreTitle = "Wrong, that is the flag of \(countries[correctAnswer])"
         }
         
         showingScore = true
@@ -119,6 +142,14 @@ struct ContentView: View {
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
         }
+    
+    func restart() {
+        countries.shuffle()
+        correctAnswer = Int.random(in: 0...2)
+        score = 0
+        questionsPlayed = 0
+        }
+    
 }
 
 
