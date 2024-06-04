@@ -1,4 +1,4 @@
-# Guess the Flad
+# Guess the Flag
 
 This app is project 2 of "100 Days of SwiftUI". The app lets you chose a flag that corresponds to a text prompt. An alert will tell you if you got the answer right or wrong, and what flag you tapped, if you tapped iincorrectly. The game resets after 8 questions are completed. 
 
